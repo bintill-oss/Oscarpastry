@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oscar Pastry - Cake & Pastry Premium</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1e293b; /* slate-800 */
+        }
+        /* Custom Keyframes for Blob Animation */
+        @keyframes blob {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+        }
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        /* Style untuk Modal (Pop-up) */
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .modal-content {
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        .modal:not(.hidden) .modal-content {
+            transform: translateY(0);
+        }
+
+        /* Active Payment Selection */
+        .payment-option.active {
+            border-color: #d97706; /* amber-500 */
+            background-color: #fef3c7; /* amber-100 */
+            box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
+        }
+        /* Class untuk styling kartu produk yang baru ditambahkan */
+        .product-added-animation {
+            animation: pulse-border 0.5s ease-out;
+        }
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(217, 119, 6, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-white">
+
+    <!-- --- NAVBAR --- -->
+    <nav id="navbar" class="fixed w-full z-40 transition-all duration-300 bg-transparent py-5">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#home" class="flex items-center gap-2" onclick="smoothScroll(event, '#home')">
+                <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold">O</div>
+                <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-rose-400">
+                    Oscar Pastry
+                </span>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex gap-8 font-medium text-slate-600">
+                <a href="#home" class="nav-item" onclick="smoothScroll(event, '#home')">Beranda</a>
+                <a href="#about" class="nav-item" onclick="smoothScroll(event, '#about')">Tentang Kami</a>
+                <a href="#menu" class="nav-item" onclick="smoothScroll(event, '#menu')">Menu</a>
+                <a href="#testi" class="nav-item" onclick="smoothScroll(event, '#testi')">Testimoni</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="flex items-center gap-4 md:hidden">
+                <button id="mobile-menu-btn" class="p-2 rounded-full hover:bg-amber-50 transition-colors">
+                    <i data-lucide="menu" id="menu-icon"></i> 
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Content -->
+        <div id="mobile-menu" class="md:hidden absolute top-full left-0 w-full bg-white shadow-xl py-0 max-h-0 overflow-hidden transition-all duration-300">
+            <a href="#home" class="mobile-nav-item" onclick="handleMobileNavClick(event, '#home')">Beranda</a>
+            <a href="#about" class="mobile-nav-item" onclick="handleMobileNavClick(event, '#about')">Tentang Kami</a>
+            <a href="#menu" class="mobile-nav-item" onclick="handleMobileNavClick(event, '#menu')">Menu</a>
+            <a href="#testi" class="mobile-nav-item" onclick="handleMobileNavClick(event, '#testi')">Testimoni</a>
+        </div>
+    </nav>
+    
+    <!-- --- HERO SECTION --- -->
+    <section id="home" class="relative pt-32 pb-20 overflow-hidden">
+        <!-- Decorative Blobs -->
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-amber-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
+        <div class="absolute top-0 right-40 -mr-20 -mt-20 w-96 h-96 bg-rose-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
+
+        <div class="container mx-auto px-6 relative">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2 space-y-6">
+                    <div class="inline-block px-4 py-2 bg-rose-100 text-rose-600 rounded-full text-sm font-semibold tracking-wide animate-pulse">
+                        ✨ Fresh Baked Daily
+                    </div>
+                    <h1 class="text-5xl md:text-6xl font-extrabold leading-tight text-slate-900">
+                        Kelezatan <span class="text-amber-500">Premium</span> <br/>
+                        Dalam Setiap <span class="text-rose-400">Potongan</span>
+                    </h1>
+                    <p class="text-lg text-slate-600 max-w-lg">
+                        Nikmati berbagai cake, pastry, dan roti lezat dengan kualitas terbaik. Dibuat dengan bahan premium dan dipanggang segar setiap hari.
+                    </p>
+                    <div class="flex gap-4 pt-4">
+                        <a 
+                            href="#menu" 
+                            onclick="smoothScroll(event, '#menu')"
+                            class="px-8 py-4 bg-gradient-to-r from-amber-500 to-rose-400 text-white rounded-full font-bold shadow-lg hover:shadow-amber-500/30 transform hover:-translate-y-1 transition-all duration-300"
+                        >
+                            Lihat Menu
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 relative group">
+                    <div class="relative z-10">
+                        <img 
+                            src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1080&q=80" 
+                            alt="Premium Cake" 
+                            class="rounded-3xl shadow-2xl rotate-3 group-hover:rotate-0 transition-all duration-700 w-full object-cover h-[400px] hover:scale-105"
+                        />
+                        <!-- Floating Badge -->
+                        <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-xl flex items-center gap-3 animate-bounce">
+                            <div class="bg-green-100 p-2 rounded-full text-green-600">
+                                <i data-lucide="star" class="fill-current" size="24"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-slate-800">Best Seller</p>
+                                <p class="text-xs text-slate-500">Red Velvet Cake</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- --- TENTANG KAMI SECTION --- -->
+    <section id="about" class="py-20 bg-amber-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-amber-700">Oscar Pastry: Kualitas Premium, Rasa Tak Terlupakan</h2>
+                <p class="text-lg text-slate-700 max-w-3xl mx-auto font-medium">
+                    Kami menghadirkan kelezatan pastry dan cake terbaik dengan resep turun-temurun yang telah disempurnakan. Setiap produk Oscar Pastry dibuat dengan bahan premium, teknik pembuatan yang presisi, dan cinta dalam setiap lapisannya. Kami percaya, makanan yang dibuat dengan hati akan terasa kelezatannya.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1: Bahan Premium -->
+                <div class="about-card group">
+                    <i data-lucide="star" class="text-rose-400 fill-rose-400 mb-4 about-icon"></i>
+                    <h3 class="text-2xl font-bold text-slate-800 mb-4">Bahan Premium Pilihan</h3>
+                    <p class="text-slate-600">
+                        Kami hanya menggunakan bahan-bahan terbaik: butter premium, coklat Belgia, vanilla alami, dan buah segar untuk memastikan kualitas rasa yang konsisten.
+                    </p>
+                </div>
+                
+                <!-- Card 2: Handmade -->
+                <div class="about-card border-4 border-amber-500/50 group">
+                    <i data-lucide="heart-handshake" class="text-amber-500 fill-amber-500 mb-4 about-icon"></i>
+                    <h3 class="text-2xl font-bold text-slate-800 mb-4">Handmade dengan Cinta</h3>
+                    <p class="text-slate-600">
+                        Setiap kue dibuat secara handmade oleh pastry chef berpengalaman. Tidak ada produksi massal, hanya keahlian dan perhatian pada detail.
+                    </p>
+                </div>
+                
+                <!-- Card 3: Fresh Daily -->
+                <div class="about-card group">
+                    <i data-lucide="zap" class="text-green-500 fill-green-500 mb-4 about-icon"></i>
+                    <h3 class="text-2xl font-bold text-slate-800 mb-4">Segar Setiap Hari</h3>
+                    <p class="text-slate-600">
+                        Semua produk dipanggang segar setiap pagi. Tidak ada stok lama, karena kami percaya kesegaran adalah kunci kelezatan sejati.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- --- MENU SECTION --- -->
+    <section id="menu" class="py-20 bg-slate-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Menu Lezat Kami</h2>
+                <p class="text-slate-600">Klik tombol tambah untuk mulai memesan</p>
+                
+                <div class="flex justify-center gap-4 mt-8" id="category-filter">
+                    <!-- Category Buttons injected by JS -->
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8" id="product-list">
+                <!-- Product Cards injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- --- TESTIMONIALS & COMMENT SECTION --- -->
+    <section id="testi" class="py-20 bg-slate-900 text-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-12 text-center">Kata Mereka Yang Udah Coba</h2>
+            
+            <!-- Testimonial Grid -->
+            <div class="grid md:grid-cols-3 gap-8 mb-16" id="testimonial-container">
+                <!-- Testimonials injected by JS -->
+            </div>
+
+            <!-- Comment Form Section -->
+            <div class="bg-slate-800 p-8 rounded-3xl max-w-xl mx-auto shadow-2xl">
+                <h3 class="text-2xl font-bold mb-6 text-amber-400 text-center">Tinggalkan Komentar Anda</h3>
+                <form id="comment-form" onsubmit="addComment(event)">
+                    <div class="mb-4">
+                        <label for="comment-name" class="block text-sm font-medium text-slate-300 mb-1">Nama Anda</label>
+                        <input type="text" id="comment-name" required class="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:ring-amber-500 focus:border-amber-500" placeholder="Contoh: Budi">
+                    </div>
+                    <div class="mb-4">
+                        <label for="comment-rating" class="block text-sm font-medium text-slate-300 mb-1">Rating (1-5)</label>
+                        <input type="number" id="comment-rating" min="1" max="5" required class="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:ring-amber-500 focus:border-amber-500" placeholder="5">
+                    </div>
+                    <div class="mb-6">
+                        <label for="comment-text" class="block text-sm font-medium text-slate-300 mb-1">Komentar Anda</label>
+                        <textarea id="comment-text" rows="3" required class="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:ring-amber-500 focus:border-amber-500" placeholder="Tulis pengalaman Anda di sini..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-amber-500 to-rose-400 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/40 transition-all duration-300">
+                        Kirim Komentar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- --- FOOTER --- -->
+    <footer class="bg-slate-900 pt-16 pb-10">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 border-b border-slate-700 pb-10 mb-10 max-w-2xl mx-auto">
+                
+                <!-- Contact Info -->
+                <div class="space-y-3">
+                    <h3 class="text-xl font-semibold text-white mb-4 border-b border-amber-500/50 pb-2">Hubungi Kami</h3>
+                    <p class="flex items-center text-slate-400 hover:text-white transition-colors">
+                        <i data-lucide="phone" class="w-5 h-5 mr-3 text-amber-500"></i>
+                        <span>085812345678 (WhatsApp)</span>
+                    </p>
+                    <p class="flex items-center text-slate-400 hover:text-white transition-colors">
+                        <i data-lucide="mail" class="w-5 h-5 mr-3 text-amber-500"></i>
+                        <span>oscarpastry.id@gmail.com</span>
+                    </p>
+                    <p class="flex items-center text-slate-400 hover:text-white transition-colors">
+                        <i data-lucide="map-pin" class="w-5 h-5 mr-3 text-amber-500"></i>
+                        <span>Jakarta Selatan, Indonesia</span>
+                    </p>
+                </div>
+
+                <!-- Social Media -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold text-white mb-4 border-b border-amber-500/50 pb-2">Temukan Kami</h3>
+                    <a href="https://www.instagram.com/" target="_blank" class="flex items-center gap-3 text-slate-400 hover:text-amber-400 transition-colors group">
+                        <i data-lucide="instagram" class="w-6 h-6 text-amber-500 group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium">@oscarpastry (Instagram)</span>
+                    </a>
+                    <a href="https://wa.me/6285812345678" target="_blank" class="flex items-center gap-3 text-slate-400 hover:text-green-400 transition-colors group">
+                        <i data-lucide="message-circle" class="w-6 h-6 text-green-500 group-hover:scale-110 transition-transform"></i>
+                        <span class="font-medium">WhatsApp Chat</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Copyright and Owner -->
+            <div class="text-center pt-8 text-slate-500 text-sm">
+                <p class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-rose-300 mb-2">Oscar Pastry</p>
+                <p>&copy; 2024 Oscar Pastry. All rights reserved.</p>
+                <p class="mt-2 text-amber-300 font-medium">
+                    Owner: Oscar Wijaya, Pastry Chef dengan pengalaman 10 tahun.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- --- STICKY CART BAR --- -->
+    <div id="cart-bar" class="fixed bottom-0 left-0 w-full z-50 transition-transform duration-500 translate-y-full">
+        <div class="container mx-auto max-w-4xl px-4 pb-4">
+            <div class="bg-slate-900 text-white p-4 rounded-2xl shadow-2xl flex items-center justify-between backdrop-blur-lg bg-opacity-95 border border-slate-700">
+                <div class="flex items-center gap-4">
+                    <div class="bg-amber-500 w-12 h-12 rounded-xl flex items-center justify-center relative">
+                        <i data-lucide="shopping-bag" size="24"></i>
+                        <span id="cart-total-items" class="absolute -top-2 -right-2 bg-red-500 text-xs w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-900">
+                            0
+                        </span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-slate-400 text-xs uppercase tracking-wider font-semibold">Total Pesanan</span>
+                        <span id="cart-total-price" class="text-xl font-bold">Rp 0</span>
+                    </div>
+                </div>
+                
+                <button 
+                    id="checkout-btn"
+                    class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-green-500/30 flex items-center gap-2 hover:scale-105 active:scale-95"
+                >
+                    <span>Pilih Pembayaran</span>
+                    <i data-lucide="chevron-right" size="20" class="hidden sm:block"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- --- PAYMENT MODAL (POP-UP) --- -->
+    <div id="payment-modal" class="modal fixed inset-0 bg-black bg-opacity-70 z-[60] flex items-center justify-center hidden">
+        <div class="modal-content bg-white p-8 rounded-3xl shadow-2xl max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-6 border-b pb-3">
+                <h3 class="text-2xl font-bold text-slate-800">Pilih Metode Pembayaran</h3>
+                <button class="text-slate-500 hover:text-red-500" onclick="closeModal()">
+                    <i data-lucide="x" size="24"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <p class="text-lg font-semibold">Total Pesanan: <span id="modal-total-price" class="text-amber-600">Rp 0</span></p>
+
+                <!-- Payment Options -->
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Option: QRIS -->
+                    <button class="payment-option border-2 border-slate-200 rounded-xl p-4 text-center transition-all hover:shadow-md" data-method="QRIS" onclick="selectPayment('QRIS')">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/QRIS_logo.svg/1200px-QRIS_logo.svg.png" alt="QRIS" class="h-8 w-auto mx-auto mb-2 object-contain">
+                        <p class="text-sm font-semibold">QRIS</p>
+                    </button>
+                    <!-- Option: Gopay -->
+                    <button class="payment-option border-2 border-slate-200 rounded-xl p-4 text-center transition-all hover:shadow-md" data-method="Gopay" onclick="selectPayment('Gopay')">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Gopay_logo.svg/1200px-Gopay_logo.svg.png" alt="Gopay" class="h-8 w-auto mx-auto mb-2 object-contain">
+                        <p class="text-sm font-semibold">Gopay</p>
+                    </button>
+                    <!-- Option: ShopeePay -->
+                    <button class="payment-option border-2 border-slate-200 rounded-xl p-4 text-center transition-all hover:shadow-md" data-method="ShopeePay" onclick="selectPayment('ShopeePay')">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/ShopeePay.svg/1200px-ShopeePay.svg.png" alt="ShopeePay" class="h-8 w-auto mx-auto mb-2 object-contain">
+                        <p class="text-sm font-semibold">ShopeePay</p>
+                    </button>
+                    <!-- Option: Mobile Bank (BCA Placeholder) -->
+                    <button class="payment-option border-2 border-slate-200 rounded-xl p-4 text-center transition-all hover:shadow-md" data-method="Transfer Bank" onclick="selectPayment('Transfer Bank')">
+                        <i data-lucide="banknote" class="h-8 w-auto mx-auto mb-2 text-amber-500"></i>
+                        <p class="text-sm font-semibold">Transfer Bank</p>
+                    </button>
+                </div>
+            </div>
+
+            <div id="payment-details" class="mt-6 p-4 bg-amber-50 rounded-lg hidden">
+                <h4 class="font-bold text-lg mb-2 text-amber-600" id="detail-title"></h4>
+                <p class="text-sm text-slate-700" id="detail-info"></p>
+                <!-- QRIS Placeholder Image -->
+                <div id="qris-image-container" class="mt-4 text-center hidden">
+                    <img src="https://placehold.co/300x300/f3f4f6/374151?text=QRIS+CODE+PLACEHOLDER" alt="QRIS Code Placeholder" class="w-48 h-48 mx-auto border-4 border-slate-200 rounded-lg shadow-lg">
+                    <p class="text-xs mt-2 text-slate-500">Scan QR code ini untuk pembayaran.</p>
+                </div>
+            </div>
+
+            <!-- Tombol ini langsung memproses ke WA setelah metode dipilih -->
+            <button 
+                id="confirm-payment-btn"
+                class="w-full py-3 mt-6 bg-amber-500 text-white font-bold rounded-xl hover:bg-amber-600 transition-colors opacity-50 cursor-not-allowed"
+                disabled
+                onclick="processCheckout()"
+            >
+                Konfirmasi dan Lanjut ke WhatsApp
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        // --- DATA PRODUK DAN KOMENTAR ---
+        const products = [
+            // Cake
+            { id: 1, name: "Red Velvet Cake", description: "Lapisan lembut dengan krim keju yang creamy dan sedikit coklat, dekorasi elegan.", price: 85000, category: "Cake", image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", color: "bg-red-50" },
+            { id: 2, name: "Chocolate Ganache Cake", description: "Coklat Belgia premium dengan lapisan ganache yang kaya dan lezat.", price: 90000, category: "Cake", image: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", color: "bg-amber-50" },
+            { id: 3, name: "Tiramisu Classic", description: "Kopi Italia dengan mascarpone dan coklat bubuk, rasa autentik Italia.", price: 75000, category: "Cake", image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", color: "bg-yellow-50" },
+            { id: 4, name: "Cheesecake Berry", description: "Cheesecake lembut dengan saus buah beri segar, kombinasi sempurna manis dan asam.", price: 80000, category: "Cake", image: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", color: "bg-pink-50" },
+            { id: 5, name: "Carrot Cake Premium", description: "Kombinasi wortel, kacang, dan rempah dengan frosting cream cheese yang lembut.", price: 70000, category: "Cake", image: "https://images.unsplash.com/photo-1596223575327-99a5cdc9f5f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", color: "bg-orange-50" },
+            
+            // Pastry
+            { id: 6, name: "Croissant Almond", description: "Croissant renyah dengan isian krim almond dan taburan almond slice.", price: 25000, category: "Pastry", image: "https://images.unsplash.com/photo-1555507036-ab794f27d2e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", color: "bg-amber-100" },
+            { id: 7, name: "Pain au Chocolat", description: "Pastri berlapis dengan batang coklat di dalamnya, renyah di luar lembut di dalam.", price: 22000, category: "Pastry", image: "https://images.unsplash.com/photo 1623334044303-241021148842?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", color: "bg-yellow-100" },
+            { id: 8, name: "Apple Turnover", description: "Pastri renyah dengan isian apel manis asam dan kayu manis.", price: 20000, category: "Pastry", image: "https://images.unsplash.com/photo-1567608285962-8e2e7c585c47?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", color: "bg-green-50" },
+            { id: 9, name: "Danish Cheese", description: "Pastri berlapis dengan cream cheese filling dan taburan gula halus.", price: 23000, category: "Pastry", image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", color: "bg-white" },
+            
+            // Dessert
+            { id: 10, name: "Chocolate Eclair", description: "Eclair lembut dengan krim coklat dan glazing coklat Belgia.", price: 18000, category: "Dessert", image: "https://images.unsplash.com/photo-1574085733277-851d6f7c8c5a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", color: "bg-brown-50" },
+            { id: 11, name: "Fruit Tartlet", description: "Kue tart mini dengan custard dan topping buah segar musiman.", price: 20000, category: "Dessert", image: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", color: "bg-red-100" },
+            { id: 12, name: "Macarons Box (6pcs)", description: "Macaron lembut dengan berbagai rasa: vanilla, chocolate, strawberry, matcha.", price: 75000, category: "Dessert", image: "https://images.unsplash.com/photo-1569929238190-869826b1bb05?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", color: "bg-pink-100" },
+            
+            // Roti
+            { id: 13, name: "Sourdough Bread", description: "Roti sourdough alami dengan tekstur kenyal dan rasa asam yang khas.", price: 45000, category: "Roti", image: "https://images.unsplash.com/photo-1583354490345-8b8dc8b7a884?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", color: "bg-amber-50" },
+            { id: 14, name: "Brioche Loaf", description: "Roti brioche lembut, manis, dan beraroma butter yang kaya.", price: 40000, category: "Roti", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", color: "bg-yellow-50" },
+            { id: 15, name: "Bagel Everything", description: "Bagel kenyal dengan taburan biji wijen, bawang, dan garam laut.", price: 18000, category: "Roti", image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", color: "bg-white" }
+        ];
+
+        let cart = []; // Menyimpan item: [{...product, qty: 1}]
+        let activeCategory = 'All';
+        let selectedPaymentMethod = null;
+        let lastAddedId = null; // Untuk animasi
+        let comments = [
+            { name: "Sarah", text: "Red Velvet Cake-nya luar biasa! Lembut dan cream cheese frosting-nya pas banget. Keluarga langsung habis dalam sekali makan.", rating: 5, time: "2 hari lalu" },
+            { name: "Budi", text: "Croissant Almond-nya renyah dan enak banget. Pagi-pagi dikirim fresh, jadi sarapan sempurna. Bakal pesen lagi!", rating: 5, time: "3 hari lalu" },
+            { name: "Maya", text: "Tiramisunya authentic banget rasa kopinya. Ga terlalu manis, teksturnya perfect. Highly recommended!", rating: 4, time: "1 minggu lalu" },
+            { name: "Rina", text: "Macarons-nya cantik dan enak. Warna-warni, teksturnya lembut. Cocok buat hadiah ulang tahun.", rating: 5, time: "5 hari lalu" },
+        ];
+
+
+        // --- UTILITY FUNCTIONS ---
+
+        // Helper untuk memformat angka Rupiah
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(number);
+        }
+
+        // Smooth Scroll
+        function smoothScroll(event, targetId) {
+            event.preventDefault();
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                // Tutup menu mobile jika terbuka
+                const mobileMenu = document.getElementById('mobile-menu');
+                const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+                const isOpen = mobileMenu.style.maxHeight !== '0px' && mobileMenu.style.maxHeight !== '';
+                
+                if (isOpen) {
+                    mobileMenu.style.maxHeight = '0';
+                    // FIX: Cek ketersediaan lucide sebelum menggunakan toSvg
+                    if (mobileMenuBtn && typeof lucide !== 'undefined' && lucide.icons && lucide.icons['menu']) {
+                        // Ganti ikon menjadi 'menu'
+                        mobileMenuBtn.innerHTML = lucide.icons['menu'].toSvg({ size: 24, id: 'menu-icon' }); 
+                        lucide.createIcons(); // Merender ulang ikon
+                    }
+                }
+                
+                // Sesuaikan scroll top dengan tinggi navbar
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80, 
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Handle Mobile Nav Click
+        function handleMobileNavClick(event, targetId) {
+            smoothScroll(event, targetId);
+        }
+
+
+        // --- NAVBAR LOGIC ---
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 20) {
+                navbar.className = 'fixed w-full z-40 transition-all duration-300 bg-white/95 backdrop-blur-md shadow-lg py-3';
+            } else {
+                navbar.className = 'fixed w-full z-40 transition-all duration-300 bg-transparent py-5';
+            }
+        });
+
+        // --- CART LOGIC ---
+
+        function updateCartUI() {
+            const totalPrice = cart.reduce((total, item) => total + (item.price * item.qty), 0);
+            const totalItems = cart.reduce((total, item) => total + item.qty, 0);
+
+            // Update Sticky Bar
+            const cartBar = document.getElementById('cart-bar');
+            cartBar.style.transform = totalItems > 0 ? 'translateY(0)' : 'translateY(100%)';
+            document.getElementById('cart-total-items').textContent = totalItems;
+            document.getElementById('cart-total-price').textContent = formatRupiah(totalPrice);
+            
+            // Update Modal
+            document.getElementById('modal-total-price').textContent = formatRupiah(totalPrice);
+            
+            // Re-render product list to update buttons and remove animation
+            renderProducts();
+            // Call createIcons here too to catch any dynamically rendered icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons(); 
+            }
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                cart = cart.map(item => 
+                    item.id === productId ? { ...item, qty: item.qty + 1 } : item
+                );
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            
+            // Trigger animation
+            lastAddedId = productId;
+            updateCartUI();
+            
+            // Clear animation effect after timeout
+            setTimeout(() => {
+                lastAddedId = null;
+                // Re-render specifically to remove the animation effect after timeout
+                renderProducts();
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }, 500); 
+        }
+
+        function removeFromCart(productId) {
+            const existingItem = cart.find(item => item.id === productId);
+            if (!existingItem) return;
+
+            if (existingItem.qty === 1) {
+                cart = cart.filter(item => item.id !== productId);
+            } else {
+                cart = cart.map(item => 
+                    item.id === productId ? { ...item, qty: item.qty - 1 } : item
+                );
+            }
+            updateCartUI();
+        }
+
+        // --- RENDERING FUNCTIONS ---
+
+        function setCategory(category) {
+            activeCategory = category;
+            renderProducts();
+            renderCategoryButtons();
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+
+        function renderCategoryButtons() {
+            const container = document.getElementById('category-filter');
+            container.innerHTML = '';
+            
+            const categories = ['All', ...new Set(products.map(p => p.category))];
+
+            categories.forEach(cat => {
+                const button = document.createElement('button');
+                button.textContent = cat;
+                button.onclick = () => setCategory(cat);
+                button.className = `px-6 py-2 rounded-full transition-all duration-200 ${
+                    activeCategory === cat 
+                    ? 'bg-amber-500 text-white shadow-md transform scale-105' 
+                    : 'bg-white text-slate-600 hover:bg-amber-50 hover:scale-105'
+                }`;
+                container.appendChild(button);
+            });
+        }
+
+        function renderProducts() {
+            const container = document.getElementById('product-list');
+            container.innerHTML = '';
+            
+            const filteredProducts = activeCategory === 'All' 
+                ? products 
+                : products.filter(p => p.category === activeCategory);
+
+            filteredProducts.forEach(product => {
+                const qtyInCart = cart.find(i => i.id === product.id)?.qty || 0;
+                
+                let buttonHtml;
+                if (qtyInCart === 0) {
+                    // Hanya tambahkan kelas animasi jika produk baru saja ditambahkan
+                    const animationClass = lastAddedId === product.id ? 'bg-green-500 scale-95 product-added-animation' : 'bg-slate-900 hover:bg-amber-500';
+                    buttonHtml = `
+                        <button 
+                            onclick="addToCart(${product.id})"
+                            class="w-full py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${animationClass} text-white shadow-lg active:scale-95"
+                        >
+                            <i data-lucide="plus" size="18"></i> Mau Pesan
+                        </button>`;
+                } else {
+                    buttonHtml = `
+                        <div class="flex items-center justify-between bg-slate-100 rounded-xl p-1">
+                            <button 
+                                onclick="removeFromCart(${product.id})"
+                                class="w-10 h-10 flex items-center justify-center bg-white rounded-lg text-slate-800 shadow-sm hover:bg-red-50 hover:text-red-500 transition-colors"
+                            >
+                                <i data-lucide="${qtyInCart === 1 ? 'trash-2' : 'minus'}" size="16"></i>
+                            </button>
+                            <span class="font-bold text-slate-800">${qtyInCart}</span>
+                            <button 
+                                onclick="addToCart(${product.id})"
+                                class="w-10 h-10 flex items-center justify-center bg-slate-900 rounded-lg text-white shadow-sm hover:bg-slate-700 transition-colors active:scale-90"
+                            >
+                                <i data-lucide="plus" size="16"></i>
+                            </button>
+                        </div>`;
+                }
+
+                const productCard = document.createElement('div');
+                productCard.className = "bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 group hover:-translate-y-2";
+                productCard.innerHTML = `
+                    <div class="h-48 overflow-hidden relative ${product.color}">
+                        <img 
+                            src="${product.image}" 
+                            alt="${product.name}" 
+                            onerror="this.onerror=null;this.src='https://placehold.co/400x300/fecaca/991b1b?text=Image+Error'" 
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-sm font-bold text-slate-800">
+                            ${formatRupiah(product.price)}
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xs font-semibold text-amber-500 mb-2 uppercase tracking-wider">${product.category}</div>
+                        <h3 class="text-xl font-bold mb-2 text-slate-800">${product.name}</h3>
+                        <p class="text-slate-500 text-sm mb-6 line-clamp-2">${product.description}</p>
+                        ${buttonHtml}
+                    </div>
+                `;
+                container.appendChild(productCard);
+            });
+        }
+
+        // --- PAYMENT MODAL LOGIC ---
+
+        document.getElementById('checkout-btn').addEventListener('click', () => {
+            if (cart.length > 0) {
+                openModal();
+            }
+        });
+
+        function openModal() {
+            const modal = document.getElementById('payment-modal');
+            const body = document.body;
+            modal.classList.remove('hidden');
+            // Menghindari scroll body saat modal terbuka
+            body.style.overflow = 'hidden'; 
+            
+            // Reset selection
+            selectedPaymentMethod = null;
+            document.getElementById('confirm-payment-btn').disabled = true;
+            document.getElementById('confirm-payment-btn').classList.add('opacity-50', 'cursor-not-allowed');
+            document.getElementById('payment-details').classList.add('hidden');
+            document.getElementById('qris-image-container').classList.add('hidden');
+            document.querySelectorAll('.payment-option').forEach(btn => btn.classList.remove('active'));
+            
+            // Pastikan ikon ter-render di modal
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons(); 
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('payment-modal');
+            const body = document.body;
+            modal.classList.add('hidden');
+            body.style.overflow = '';
+        }
+
+        function selectPayment(method) {
+            selectedPaymentMethod = method;
+            const confirmBtn = document.getElementById('confirm-payment-btn');
+            const detailsDiv = document.getElementById('payment-details');
+            const qrisContainer = document.getElementById('qris-image-container');
+            const detailTitle = document.getElementById('detail-title');
+            const detailInfo = document.getElementById('detail-info');
+
+            // Set button active state
+            document.querySelectorAll('.payment-option').forEach(btn => {
+                if (btn.dataset.method === method) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Update details view
+            detailsDiv.classList.remove('hidden');
+            qrisContainer.classList.add('hidden');
+
+            switch(method) {
+                case 'QRIS':
+                    detailTitle.textContent = "Pembayaran via QRIS";
+                    detailInfo.textContent = "Scan kode QR di bawah menggunakan aplikasi pembayaran apa pun (Gopay, OVO, Dana, dll). Setelah transfer, klik 'Konfirmasi' untuk mengirim bukti ke WA.";
+                    qrisContainer.classList.remove('hidden');
+                    break;
+                case 'Gopay':
+                    detailTitle.textContent = "Pembayaran via GoPay";
+                    detailInfo.textContent = "Lanjutkan ke GoPay. Setelah transfer ke GoPay, klik 'Konfirmasi' untuk mengirim bukti ke WA.";
+                    break;
+                case 'ShopeePay':
+                    detailTitle.textContent = "Pembayaran via ShopeePay";
+                    detailInfo.textContent = "Lanjutkan ke ShopeePay. Setelah transfer ke ShopeePay, klik 'Konfirmasi' untuk mengirim bukti ke WA.";
+                    break;
+                case 'Transfer Bank':
+                    detailTitle.textContent = "Transfer Bank (BCA)";
+                    detailInfo.textContent = "Transfer ke Rekening BCA: 1234567890 a.n. Oscar Wijaya. Setelah transfer, klik 'Konfirmasi' untuk mengirim bukti ke WA.";
+                    break;
+            }
+
+            // Enable confirmation button
+            confirmBtn.disabled = false;
+            confirmBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+
+        // Fungsi ini diubah untuk langsung membuat template WA
+        function processCheckout() {
+            if (!selectedPaymentMethod) return;
+
+            const totalPrice = cart.reduce((total, item) => total + (item.price * item.qty), 0);
+            let message = "Halo Oscar Pastry, saya mau pesan:\n\n";
+            
+            // Daftar Pesanan
+            cart.forEach(item => {
+                message += `* ${item.name} (Qty: ${item.qty}) - ${formatRupiah(item.price * item.qty)}\n`;
+            });
+            
+            // Ringkasan
+            message += `\nTotal Harga: ${formatRupiah(totalPrice)}`;
+            message += `\nMetode Pembayaran Pilihan: *${selectedPaymentMethod}*`;
+            message += `\n\n[PENTING] Mohon kirimkan bukti transfer/pembayaran Anda ke chat ini. Terima kasih!`;
+
+            const encodedMessage = encodeURIComponent(message);
+            // Nomor WhatsApp Admin
+            const waNumber = "6285812345678"; 
+            
+            window.open(`https://wa.me/${waNumber}?text=${encodedMessage}`, '_blank');
+            
+            // Clear cart and close modal after successful redirection
+            cart = [];
+            closeModal();
+            updateCartUI();
+        }
+
+
+        // --- COMMENT/TESTIMONIAL LOGIC ---
+
+        function renderTestimonials() {
+            const container = document.getElementById('testimonial-container');
+            container.innerHTML = '';
+
+            comments.slice().reverse().forEach(comment => {
+                let starIcons = '';
+                // FIX: Cek ketersediaan lucide sebelum menggunakan toSvg
+                if (typeof lucide !== 'undefined' && lucide.icons && lucide.icons['star']) {
+                     starIcons = Array(5).fill(0).map((_, i) => 
+                        `<span style="color: ${i < comment.rating ? '#facc15' : '#475569'};">${lucide.icons['star'].toSvg({ size: 16, class: 'fill-current' })}</span>`
+                    ).join('');
+                } else {
+                     starIcons = Array(comment.rating).fill('★').join('') + Array(5 - comment.rating).fill('☆').join('');
+                }
+               
+                const card = document.createElement('div');
+                card.className = "bg-slate-800 p-8 rounded-3xl text-left relative transform hover:-translate-y-2 transition-transform duration-300 shadow-xl";
+                card.innerHTML = `
+                    <div class="flex mb-4">${starIcons}</div>
+                    <p class="text-slate-300 mb-6 text-base italic">"${comment.text}"</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-gradient-to-tr from-amber-500 to-rose-400 rounded-full flex items-center justify-center text-white font-bold">${comment.name.charAt(0)}</div>
+                        <div>
+                            <h4 class="font-bold text-white">${comment.name}</h4>
+                            <p class="text-xs text-slate-400">${comment.time || 'Baru saja'}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            // Walaupun sudah ada di updateUI, panggil lagi untuk memastikan rendering selesai
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+
+        function addComment(event) {
+            event.preventDefault();
+            const nameInput = document.getElementById('comment-name');
+            const ratingInput = document.getElementById('comment-rating');
+            const textInput = document.getElementById('comment-text');
+
+            const newComment = {
+                name: nameInput.value || "Anonim",
+                text: textInput.value,
+                rating: parseInt(ratingInput.value) || 5,
+                time: "Baru saja"
+            };
+
+            comments.push(newComment);
+            renderTestimonials();
+
+            // Reset form
+            nameInput.value = '';
+            ratingInput.value = 5;
+            textInput.value = '';
+            
+            // Konfirmasi (tanpa alert, ganti dengan animasi)
+            const formContainer = document.getElementById('comment-form').parentNode;
+            const originalFormHtml = document.getElementById('comment-form').outerHTML;
+            formContainer.innerHTML = '<p class="text-center text-green-400 font-bold p-4 bg-slate-700 rounded-xl animate-pulse">Terima kasih! Komentar Anda sudah terkirim.</p>';
+            
+            setTimeout(() => {
+                // Re-render form setelah beberapa saat
+                formContainer.innerHTML = originalFormHtml;
+                document.getElementById('comment-form').onsubmit = addComment;
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }, 2000);
+        }
+
+        // --- INITIALIZATION ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Add hover interaction to desktop nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.add('relative', 'py-1', 'hover:text-amber-500', 'transition-colors', 'group');
+                item.innerHTML = `${item.textContent}<span class="absolute bottom-0 left-0 w-full h-0.5 bg-amber-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>`;
+            });
+
+            // 2. Add style and content to mobile nav items (MENGGUNAKAN LUCIDE)
+            document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                item.classList.add('block', 'py-3', 'px-6', 'text-slate-800', 'hover:text-amber-500', 'border-b', 'border-slate-100', 'last:border-b-0');
+                
+                // FIX KRUSIAL: Memastikan lucide tersedia saat toSvg dipanggil
+                if (typeof lucide !== 'undefined' && lucide.icons && lucide.icons['chevron-right']) {
+                    item.innerHTML = `${item.textContent} ${lucide.icons['chevron-right'].toSvg({ size: 16, class: 'inline ml-2' })}`;
+                }
+            });
+            
+            // 3. Add style and interaction to about cards
+            document.querySelectorAll('.about-card').forEach(card => {
+                card.classList.add('bg-white', 'p-8', 'rounded-3xl', 'shadow-xl', 'transition-all', 'duration-300', 'hover:shadow-2xl', 'hover:-translate-y-1', 'group');
+            });
+            document.querySelectorAll('.about-icon').forEach(icon => {
+                icon.classList.add('w-8', 'h-8', 'mb-4', 'group-hover:scale-110', 'transition-transform');
+            });
+
+            // 4. Mobile Menu Listener
+            document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+                const mobileMenu = document.getElementById('mobile-menu');
+                const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+                const isOpen = mobileMenu.style.maxHeight !== '0px' && mobileMenu.style.maxHeight !== '';
+
+                if (typeof lucide !== 'undefined' && lucide.icons && mobileMenuBtn) {
+                    if (isOpen) {
+                        mobileMenu.style.maxHeight = '0';
+                        // Ganti ikon menjadi 'menu'
+                        mobileMenuBtn.innerHTML = lucide.icons['menu'].toSvg({ size: 24, id: 'menu-icon' }); 
+                    } else {
+                        mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+                        // Ganti ikon menjadi 'x'
+                        mobileMenuBtn.innerHTML = lucide.icons['x'].toSvg({ size: 24, id: 'menu-icon' });
+                    }
+                    // Merender ulang ikon yang baru diganti
+                    lucide.createIcons();
+                } else {
+                    // Fallback jika lucide gagal dimuat
+                    mobileMenu.style.maxHeight = isOpen ? '0' : mobileMenu.scrollHeight + 'px';
+                }
+            });
+
+            // Render initial components
+            renderCategoryButtons();
+            renderProducts();
+            renderTestimonials();
+            updateCartUI();
+            
+            // Initial check for mobile menu
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.style.maxHeight = '0px'; 
+            
+            // Panggil sekali untuk memastikan semua ikon statis ter-render
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+
+    </script>
+</body>
+</html>
